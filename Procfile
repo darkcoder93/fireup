@@ -1,1 +1,1 @@
-web: gunicorn fire_calculator.wsgi --log-file - 
+web: gunicorn --bind 0.0.0.0:$PORT fire_calculator.wsgi:application 

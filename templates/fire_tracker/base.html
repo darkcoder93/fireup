@@ -179,6 +179,24 @@
                 });
             }
         });
+
+        // Track visitor (simple tracking without page reload)
+        function trackVisitor() {
+            // Send a simple request to track the visit
+            fetch('/track-visitor/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || '',
+                    'Content-Type': 'application/json',
+                },
+            }).catch(error => {
+                // Silently fail if tracking doesn't work
+                console.log('Visitor tracking failed:', error);
+            });
+        }
+
+        // Track visitor on page load
+        trackVisitor();
     </script>
     
     {% block extra_js %}

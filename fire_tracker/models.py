@@ -4,6 +4,8 @@ from django.core.validators import MinValueValidator
 from decimal import Decimal
 import uuid
 import random
+from datetime import datetime, date
+from django.utils import timezone
 
 
 class Visitor(models.Model):
@@ -25,6 +27,26 @@ class Visitor(models.Model):
     def get_total_visitors(cls):
         """Get total number of unique visitors"""
         return cls.objects.count()
+    
+    @classmethod
+    def get_today_visitors(cls):
+        """Get number of unique visitors for today"""
+        today = timezone.now().date()
+        return cls.objects.filter(last_visit__date=today).count()
+    
+    @classmethod
+    def get_this_week_visitors(cls):
+        """Get number of unique visitors for this week"""
+        today = timezone.now().date()
+        week_start = today - timezone.timedelta(days=today.weekday())
+        return cls.objects.filter(last_visit__date__gte=week_start).count()
+    
+    @classmethod
+    def get_this_month_visitors(cls):
+        """Get number of unique visitors for this month"""
+        today = timezone.now().date()
+        month_start = today.replace(day=1)
+        return cls.objects.filter(last_visit__date__gte=month_start).count()
     
     @classmethod
     def track_visit(cls, request):

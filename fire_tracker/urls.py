@@ -14,4 +14,5 @@ urlpatterns = [
     path('calculator/', views.fire_calculator, name='fire_calculator'),
     path('api/fire-progress/', views.api_fire_progress, name='api_fire_progress'),
     path('help-chat/', views.help_chat, name='help_chat'),
+    path('track-visitor/', views.track_visitor, name='track_visitor'),
 ] 

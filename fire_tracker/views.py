@@ -13,7 +13,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView, PasswordResetDoneView, PasswordResetCompleteView
 from django.views.generic import TemplateView
 
-from .models import UserProfile, MonthlyTracking, FireProgress, Goal, InflationData
+from .models import UserProfile, MonthlyTracking, FireProgress, Goal, InflationData, Visitor
 from django.conf import settings
 
 
@@ -42,6 +42,14 @@ def dashboard(request):
     avg_savings_rate = MonthlyTracking.objects.filter(user=request.user).aggregate(
         avg_rate=Avg('savings_rate')
     )['avg_rate'] or 0
+    
+    # Get visitor statistics
+    visitor_stats = {
+        'today': Visitor.get_today_visitors(),
+        'this_week': Visitor.get_this_week_visitors(),
+        'this_month': Visitor.get_this_month_visitors(),
+        'total': Visitor.get_total_visitors(),
+    }
     
     # Get currency symbol
     currency_symbol = settings.FIRE_SETTINGS[profile.country]['currency_symbol']
@@ -81,6 +89,7 @@ def dashboard(request):
         'avg_savings_rate': avg_savings_rate,
         'currency_symbol': currency_symbol,
         'fire_numbers': fire_numbers,
+        'visitor_stats': visitor_stats,
     }
     
     return render(request, 'fire_tracker/dashboard.html', context)
@@ -543,3 +552,24 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
 class CustomRegisterView(TemplateView):
     template_name = 'registration/register.html'
     extra_context = {'hide_nav': True}
+
+
+@csrf_exempt
+def track_visitor(request):
+    """Track visitor for analytics"""
+    if request.method == 'POST':
+        try:
+            # Track the visit
+            total_visitors = Visitor.track_visit(request)
+            return JsonResponse({
+                'success': True,
+                'total_visitors': total_visitors,
+                'today_visitors': Visitor.get_today_visitors(),
+            })
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'error': str(e)
+            }, status=500)
+    
+    return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)

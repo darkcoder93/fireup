@@ -1,0 +1,292 @@
+{% extends 'fire_tracker/base.html' %}
+
+{% block title %}{% if is_update %}Update Profile{% else %}Setup Profile{% endif %} - FIRE Calculator{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-lg shadow-md p-8">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                {% if is_update %}Update Your Profile{% else %}Setup Your FIRE Profile{% endif %}
+            </h1>
+            <p class="text-gray-600">
+                {% if is_update %}
+                Update your financial information and FIRE preferences
+                {% else %}
+                Let's get started on your journey to financial independence
+                {% endif %}
+            </p>
+        </div>
+
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- Country Selection -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="country" class="block text-sm font-medium text-gray-700 mb-2">Country</label>
+                    <select name="country" id="country" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" onchange="updateDefaults()">
+                        {% for code, name in countries %}
+                        <option value="{{ code }}" {% if profile.country == code or code == 'USA' %}selected{% endif %}>{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                    <p class="mt-1 text-sm text-gray-500">This affects inflation and return rate defaults</p>
+                </div>
+                
+                <div>
+                    <label for="target_retirement_age" class="block text-sm font-medium text-gray-700 mb-2">Target Retirement Age</label>
+                    <input type="number" name="target_retirement_age" id="target_retirement_age" 
+                           value="{% if profile.target_retirement_age %}{{ profile.target_retirement_age }}{% else %}45{% endif %}"
+                           min="25" max="80" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+            </div>
+
+            <!-- Personal Information -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="current_age" class="block text-sm font-medium text-gray-700 mb-2">Current Age</label>
+                    <input type="number" name="current_age" id="current_age" 
+                           value="{% if profile.current_age %}{{ profile.current_age }}{% endif %}"
+                           min="18" max="100" required
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                
+                <div>
+                    <label for="gender" class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
+                    <select name="gender" id="gender" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" onchange="updateEmojiOptions()">
+                        {% for code, label in profile.GENDER_CHOICES %}
+                        <option value="{{ code }}" {% if profile.gender == code %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="financial_risk" class="block text-sm font-medium text-gray-700 mb-2">Financial Risk Taking Ability</label>
+                    <select name="financial_risk" id="financial_risk" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        {% for code, label in profile.RISK_CHOICES %}
+                        <option value="{{ code }}" {% if profile.financial_risk == code %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="profile_emoji" class="block text-sm font-medium text-gray-700 mb-2">Profile Emoji</label>
+                    <select name="profile_emoji" id="profile_emoji" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <!-- Options will be populated by JS -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- Net Worth -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="current_net_worth" class="block text-sm font-medium text-gray-700 mb-2">Current Net Worth</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-2 text-gray-500" id="currency_symbol">{{ currency_symbol }}</span>
+                        <input type="number" name="current_net_worth" id="current_net_worth" 
+                               value="{% if profile.current_net_worth %}{{ profile.current_net_worth }}{% else %}0{% endif %}"
+                               min="0" step="0.01" required
+                               class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Income and Expenses -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label for="annual_income" class="block text-sm font-medium text-gray-700 mb-2">Annual Income</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-2 text-gray-500" id="income_currency">{{ currency_symbol }}</span>
+                        <input type="number" name="annual_income" id="annual_income" 
+                               value="{% if profile.annual_income %}{{ profile.annual_income }}{% endif %}"
+                               min="0" step="0.01" required
+                               class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="annual_expenses" class="block text-sm font-medium text-gray-700 mb-2">Annual Expenses</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-2 text-gray-500" id="expenses_currency">{{ currency_symbol }}</span>
+                        <input type="number" name="annual_expenses" id="annual_expenses" 
+                               value="{% if profile.annual_expenses %}{{ profile.annual_expenses }}{% endif %}"
+                               min="0" step="0.01" required
+                               class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- FIRE Calculation Parameters -->
+            <div class="bg-gray-50 rounded-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">FIRE Calculation Parameters</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label for="inflation_rate" class="block text-sm font-medium text-gray-700 mb-2">Inflation Rate (%)</label>
+                        <input type="number" name="inflation_rate" id="inflation_rate" 
+                               value="{% if profile.inflation_rate %}{{ profile.inflation_rate }}{% else %}{{ default_settings.default_inflation_rate }}{% endif %}"
+                               min="0" max="20" step="0.1" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <p class="mt-1 text-xs text-gray-500">Default: {{ default_settings.default_inflation_rate }}%</p>
+                    </div>
+                    
+                    <div>
+                        <label for="expected_return_rate" class="block text-sm font-medium text-gray-700 mb-2">Expected Return Rate (%)</label>
+                        <input type="number" name="expected_return_rate" id="expected_return_rate" 
+                               value="{% if profile.expected_return_rate %}{{ profile.expected_return_rate }}{% else %}{{ default_settings.default_return_rate }}{% endif %}"
+                               min="0" max="20" step="0.1" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <p class="mt-1 text-xs text-gray-500">Default: {{ default_settings.default_return_rate }}%</p>
+                    </div>
+                    
+                    <div>
+                        <label for="withdrawal_rate" class="block text-sm font-medium text-gray-700 mb-2">Withdrawal Rate (%)</label>
+                        <input type="number" name="withdrawal_rate" id="withdrawal_rate" 
+                               value="{% if profile.withdrawal_rate %}{{ profile.withdrawal_rate }}{% else %}4.0{% endif %}"
+                               min="1" max="10" step="0.1" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <p class="mt-1 text-xs text-gray-500">4% rule is standard</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FIRE Number Preview -->
+            <div class="bg-blue-50 rounded-lg p-6">
+                <h3 class="text-lg font-semibold text-blue-900 mb-4">FIRE Number Preview</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="text-center">
+                        <p class="text-sm text-blue-700">Your FIRE Number</p>
+                        <p class="text-2xl font-bold text-blue-900" id="fire_number_preview">$0</p>
+                        <p class="text-xs text-blue-600">Annual Expenses × (100 ÷ Withdrawal Rate)</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-sm text-blue-700">Years to FIRE</p>
+                        <p class="text-2xl font-bold text-blue-900" id="years_to_fire_preview">-</p>
+                        <p class="text-xs text-blue-600">Based on current savings rate</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex justify-end space-x-4">
+                <a href="{% url 'fire_tracker:dashboard' %}" class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    Cancel
+                </a>
+                <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    {% if is_update %}Update Profile{% else %}Create Profile{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Default settings for different countries
+const countryDefaults = {
+    'USA': {
+        inflation_rate: 2.5,
+        return_rate: 7.0,
+        currency_symbol: '$'
+    },
+    'INDIA': {
+        inflation_rate: 6.0,
+        return_rate: 12.0,
+        currency_symbol: '₹'
+    }
+};
+
+function updateDefaults() {
+    const country = document.getElementById('country').value;
+    const defaults = countryDefaults[country];
+    
+    if (defaults) {
+        document.getElementById('inflation_rate').value = defaults.inflation_rate;
+        document.getElementById('expected_return_rate').value = defaults.return_rate;
+        
+        // Update currency symbols
+        document.getElementById('currency_symbol').textContent = defaults.currency_symbol;
+        document.getElementById('income_currency').textContent = defaults.currency_symbol;
+        document.getElementById('expenses_currency').textContent = defaults.currency_symbol;
+    }
+    
+    calculateFireNumber();
+}
+
+function calculateFireNumber() {
+    const annualExpenses = parseFloat(document.getElementById('annual_expenses').value) || 0;
+    const withdrawalRate = parseFloat(document.getElementById('withdrawal_rate').value) || 4;
+    const annualIncome = parseFloat(document.getElementById('annual_income').value) || 0;
+    const currentNetWorth = parseFloat(document.getElementById('current_net_worth').value) || 0;
+    const expectedReturn = parseFloat(document.getElementById('expected_return_rate').value) || 7;
+    const currentAge = parseInt(document.getElementById('current_age').value) || 0;
+    const targetAge = parseInt(document.getElementById('target_retirement_age').value) || 45;
+    
+    // Calculate FIRE number
+    const fireNumber = annualExpenses * (100 / withdrawalRate);
+    document.getElementById('fire_number_preview').textContent = formatCurrency(fireNumber);
+    
+    // Calculate years to FIRE
+    const annualSavings = annualIncome - annualExpenses;
+    let yearsToFire = '∞';
+    
+    if (annualSavings > 0 && fireNumber > currentNetWorth) {
+        let years = 0;
+        let currentAmount = currentNetWorth;
+        
+        while (currentAmount < fireNumber && years < 100) {
+            currentAmount = currentAmount * (1 + expectedReturn / 100) + annualSavings;
+            years++;
+        }
+        
+        if (years < 100) {
+            yearsToFire = years.toFixed(1);
+        }
+    }
+    
+    document.getElementById('years_to_fire_preview').textContent = yearsToFire;
+}
+
+function formatCurrency(amount) {
+    const country = document.getElementById('country').value;
+    const symbol = countryDefaults[country]?.currency_symbol || '$';
+    return symbol + amount.toLocaleString('en-US', { maximumFractionDigits: 0 });
+}
+
+// Add event listeners for real-time calculation
+document.addEventListener('DOMContentLoaded', function() {
+    const inputs = ['annual_expenses', 'withdrawal_rate', 'annual_income', 'current_net_worth', 'expected_return_rate', 'current_age', 'target_retirement_age'];
+    
+    inputs.forEach(inputId => {
+        const input = document.getElementById(inputId);
+        if (input) {
+            input.addEventListener('input', calculateFireNumber);
+        }
+    });
+    
+    // Initial calculation
+    calculateFireNumber();
+});
+
+const emojiOptions = {
+    'M': ['👦', '🧑', '👨'],
+    'F': ['👧', '🧑‍🦰', '👩'],
+    'O': ['🧑', '🧑‍🦱', '🧑‍🦰']
+};
+
+function updateEmojiOptions() {
+    const gender = document.getElementById('gender').value;
+    const emojiSelect = document.getElementById('profile_emoji');
+    emojiSelect.innerHTML = '';
+    emojiOptions[gender].forEach(function(emoji) {
+        const option = document.createElement('option');
+        option.value = emoji;
+        option.textContent = emoji;
+        emojiSelect.appendChild(option);
+    });
+    // Set selected emoji if already chosen
+    {% if profile and profile.profile_emoji %}
+    emojiSelect.value = '{{ profile.profile_emoji }}';
+    {% endif %}
+}
+
+document.addEventListener('DOMContentLoaded', updateEmojiOptions);
+</script>
+{% endblock %} 

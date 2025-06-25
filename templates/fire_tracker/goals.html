@@ -1,0 +1,228 @@
+{% extends 'fire_tracker/base.html' %}
+
+{% block title %}Goals - FIRE Calculator{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Financial Goals</h1>
+            <p class="text-gray-600">Set and track your financial milestones</p>
+        </div>
+        <button onclick="toggleForm()" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+            Add New Goal
+        </button>
+    </div>
+
+    <!-- Add Goal Form -->
+    <div id="goalForm" class="bg-white rounded-lg shadow-md p-6 hidden">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">Create New Goal</h2>
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Goal Name</label>
+                    <input type="text" name="name" id="name" required
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                           placeholder="e.g., Emergency Fund">
+                </div>
+                
+                <div>
+                    <label for="goal_type" class="block text-sm font-medium text-gray-700 mb-2">Goal Type</label>
+                    <select name="goal_type" id="goal_type" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                        {% for code, name in goal_types %}
+                        <option value="{{ code }}">{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="target_amount" class="block text-sm font-medium text-gray-700 mb-2">Target Amount</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-2 text-gray-500">{{ currency_symbol }}</span>
+                        <input type="number" name="target_amount" id="target_amount" 
+                               min="0" step="0.01" required
+                               class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="target_date" class="block text-sm font-medium text-gray-700 mb-2">Target Date (Optional)</label>
+                    <input type="date" name="target_date" id="target_date"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-4">
+                <button type="button" onclick="toggleForm()" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    Cancel
+                </button>
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    Create Goal
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Goals Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for goal in goals %}
+        <div class="bg-white rounded-lg shadow-md p-6 {% if goal.is_completed %}border-2 border-green-500{% endif %}">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900">{{ goal.name }}</h3>
+                    <p class="text-sm text-gray-600">{{ goal.get_goal_type_display }}</p>
+                </div>
+                {% if goal.is_completed %}
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    Completed
+                </span>
+                {% endif %}
+            </div>
+            
+            <div class="space-y-3">
+                <div class="flex justify-between text-sm text-gray-600 mb-2">
+                    <span>{{ currency_symbol }}{{ goal.current_amount|floatformat:0 }} / {{ currency_symbol }}{{ goal.target_amount|floatformat:0 }}</span>
+                    <span>{{ goal.progress_percentage|floatformat:1 }}%</span>
+                </div>
+                
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="bg-green-500 h-2 rounded-full transition-all duration-300" 
+                         style="width: {{ goal.progress_percentage }}%"></div>
+                </div>
+                
+                <div class="text-center">
+                    <span class="text-lg font-bold text-green-600">{{ goal.progress_percentage|floatformat:1 }}%</span>
+                </div>
+                
+                {% if goal.target_date %}
+                <div class="text-sm text-gray-600">
+                    <span class="font-medium">Target Date:</span> {{ goal.target_date|date:"M d, Y" }}
+                </div>
+                {% endif %}
+                
+                {% if not goal.is_completed %}
+                <button onclick="updateGoalProgress({{ goal.id }})" 
+                        class="w-full mt-4 px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                    Update Progress
+                </button>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full">
+            <div class="text-center py-12">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">No goals yet</h3>
+                <p class="mt-1 text-sm text-gray-500">Get started by creating your first financial goal.</p>
+                <div class="mt-6">
+                    <button onclick="toggleForm()" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        <svg class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Create First Goal
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Goal Statistics -->
+    {% if goals %}
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Goal Statistics</h3>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="text-center">
+                <div class="text-2xl font-bold text-blue-600">{{ goals.count }}</div>
+                <div class="text-sm text-gray-600">Total Goals</div>
+            </div>
+            <div class="text-center">
+                <div class="text-2xl font-bold text-green-600">{{ goals|length|add:"-1"|add:"1" }}</div>
+                <div class="text-sm text-gray-600">Active Goals</div>
+            </div>
+            <div class="text-center">
+                <div class="text-2xl font-bold text-purple-600">{{ goals|length|add:"-1"|add:"1" }}</div>
+                <div class="text-sm text-gray-600">Completed Goals</div>
+            </div>
+            <div class="text-center">
+                <div class="text-2xl font-bold text-orange-600">
+                    {% with total_progress=0 %}
+                        {% for goal in goals %}
+                            {% with total_progress=total_progress|add:goal.progress_percentage %}{% endwith %}
+                        {% endfor %}
+                        {{ total_progress|floatformat:1 }}
+                    {% endwith %}
+                </div>
+                <div class="text-sm text-gray-600">Avg Progress</div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Update Progress Modal -->
+<div id="progressModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Update Goal Progress</h3>
+            <form id="progressForm" method="post" action="">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label for="current_amount" class="block text-sm font-medium text-gray-700 mb-2">Current Amount</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-2 text-gray-500">{{ currency_symbol }}</span>
+                        <input type="number" name="current_amount" id="current_amount" 
+                               min="0" step="0.01" required
+                               class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-4">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Update
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleForm() {
+    const form = document.getElementById('goalForm');
+    form.classList.toggle('hidden');
+}
+
+function updateGoalProgress(goalId) {
+    const modal = document.getElementById('progressModal');
+    const form = document.getElementById('progressForm');
+    form.action = `/goals/${goalId}/update/`;
+    modal.classList.remove('hidden');
+}
+
+function closeModal() {
+    const modal = document.getElementById('progressModal');
+    modal.classList.add('hidden');
+}
+
+// Close modal when clicking outside
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('progressModal');
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+});
+</script>
+{% endblock %} 

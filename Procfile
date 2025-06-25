@@ -1,0 +1,1 @@
+web: gunicorn fire_calculator.wsgi --log-file - 

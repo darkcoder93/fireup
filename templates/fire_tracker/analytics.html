@@ -1,0 +1,292 @@
+{% extends 'fire_tracker/base.html' %}
+
+{% block title %}Analytics - FIRE Calculator{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Header -->
+    <div>
+        <h1 class="text-3xl font-bold text-gray-900">Analytics & Insights</h1>
+        <p class="text-gray-600">Track your financial progress with detailed analytics</p>
+    </div>
+
+    <!-- Key Metrics Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="text-center">
+                <div class="text-2xl font-bold text-blue-600 mb-2">{{ total_months }}</div>
+                <div class="text-sm text-gray-600">Months Tracked</div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="text-center">
+                <div class="text-2xl font-bold text-green-600 mb-2">{{ currency_symbol }}{{ avg_monthly_income|floatformat:0 }}</div>
+                <div class="text-sm text-gray-600">Avg Monthly Income</div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="text-center">
+                <div class="text-2xl font-bold text-red-600 mb-2">{{ currency_symbol }}{{ avg_monthly_expenses|floatformat:0 }}</div>
+                <div class="text-sm text-gray-600">Avg Monthly Expenses</div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="text-center">
+                <div class="text-2xl font-bold text-purple-600 mb-2">{{ avg_savings_rate|floatformat:1 }}%</div>
+                <div class="text-sm text-gray-600">Avg Savings Rate</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Net Worth Chart -->
+        <div class="bg-white rounded-lg shadow-md p-6" style="height:350px;">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Net Worth Over Time</h3>
+            <canvas id="netWorthChart" style="height:100%; width:100%;"></canvas>
+        </div>
+
+        <!-- Savings Rate Chart -->
+        <div class="bg-white rounded-lg shadow-md p-6" style="height:350px;">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Savings Rate Trend</h3>
+            <canvas id="savingsRateChart" style="height:100%; width:100%;"></canvas>
+        </div>
+
+        <!-- Income vs Expenses Chart -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Income vs Expenses</h3>
+            <canvas id="incomeExpensesChart" width="400" height="200"></canvas>
+        </div>
+
+        <!-- FIRE Progress Chart -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">FIRE Progress</h3>
+            <div class="text-center py-8">
+                <div class="text-4xl font-bold text-green-600 mb-2">{{ profile.fire_progress_percentage|floatformat:1 }}%</div>
+                <div class="text-sm text-gray-600">Progress to FIRE Number</div>
+                <div class="mt-4">
+                    <div class="w-full bg-gray-200 rounded-full h-4">
+                        <div class="bg-gradient-to-r from-green-400 to-blue-500 h-4 rounded-full transition-all duration-300" 
+                             style="width: {{ profile.fire_progress_percentage }}%"></div>
+                    </div>
+                </div>
+                <div class="mt-2 text-sm text-gray-600">
+                    {{ currency_symbol }}{{ profile.current_net_worth|floatformat:0 }} / {{ currency_symbol }}{{ profile.fire_number|floatformat:0 }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Insights -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Financial Insights</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="text-center">
+                <div class="text-2xl font-bold text-blue-600 mb-2">
+                    {% if net_worth_growth > 0 %}
+                        +{{ net_worth_growth|floatformat:1 }}%
+                    {% else %}
+                        {{ net_worth_growth|floatformat:1 }}%
+                    {% endif %}
+                </div>
+                <div class="text-sm text-gray-600">Net Worth Growth</div>
+            </div>
+            
+            <div class="text-center">
+                <div class="text-2xl font-bold text-green-600 mb-2">
+                    {% if profile.years_to_fire == None or profile.years_to_fire > 100 %}
+                        ∞
+                    {% else %}
+                        {{ profile.years_to_fire|floatformat:1 }}
+                    {% endif %}
+                </div>
+                <div class="text-sm text-gray-600">Years to FIRE</div>
+            </div>
+            
+            <div class="text-center">
+                <div class="text-2xl font-bold text-purple-600 mb-2">{{ profile.get_country_display }}</div>
+                <div class="text-sm text-gray-600">Market Context</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="bg-blue-50 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-blue-900 mb-4">💡 Recommendations</h3>
+        <div class="space-y-3">
+            {% if avg_savings_rate < 20 %}
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-blue-600 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-blue-800">
+                        <strong>Increase Savings Rate:</strong> Your current savings rate of {{ avg_savings_rate|floatformat:1 }}% is below the recommended 20%. Consider reducing expenses or increasing income.
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if profile.years_to_fire and profile.years_to_fire > 20 %}
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-blue-600 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-blue-800">
+                        <strong>Long FIRE Timeline:</strong> With {{ profile.years_to_fire|floatformat:1 }} years to FIRE, consider increasing your savings rate or exploring side income opportunities.
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if profile.fire_progress_percentage > 50 %}
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-green-600 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-green-800">
+                        <strong>Great Progress!</strong> You're {{ profile.fire_progress_percentage|floatformat:1 }}% to your FIRE number. Keep up the excellent work!
+                    </p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+// Parse the JSON data from Django context
+const months = {{ months|safe }};
+const netWorthData = {{ net_worth_data|safe }};
+const savingsRateData = {{ savings_rate_data|safe }};
+const incomeData = {{ income_data|safe }};
+const expensesData = {{ expenses_data|safe }};
+const currencySymbol = '{{ currency_symbol }}';
+
+// Net Worth Chart
+const netWorthCtx = document.getElementById('netWorthChart').getContext('2d');
+new Chart(netWorthCtx, {
+    type: 'line',
+    data: {
+        labels: months,
+        datasets: [{
+            label: 'Net Worth',
+            data: netWorthData,
+            borderColor: 'rgb(59, 130, 246)',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            tension: 0.1,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function(value) {
+                        return currencySymbol + value.toLocaleString();
+                    }
+                }
+            }
+        }
+    }
+});
+
+// Savings Rate Chart
+const savingsRateCtx = document.getElementById('savingsRateChart').getContext('2d');
+new Chart(savingsRateCtx, {
+    type: 'line',
+    data: {
+        labels: months,
+        datasets: [{
+            label: 'Savings Rate (%)',
+            data: savingsRateData,
+            borderColor: 'rgb(34, 197, 94)',
+            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+            tension: 0.1,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 100,
+                ticks: {
+                    callback: function(value) {
+                        return value + '%';
+                    }
+                }
+            }
+        }
+    }
+});
+
+// Income vs Expenses Chart
+const incomeExpensesCtx = document.getElementById('incomeExpensesChart').getContext('2d');
+new Chart(incomeExpensesCtx, {
+    type: 'bar',
+    data: {
+        labels: months,
+        datasets: [{
+            label: 'Income',
+            data: incomeData,
+            backgroundColor: 'rgba(34, 197, 94, 0.8)',
+            borderColor: 'rgb(34, 197, 94)',
+            borderWidth: 1
+        }, {
+            label: 'Expenses',
+            data: expensesData,
+            backgroundColor: 'rgba(239, 68, 68, 0.8)',
+            borderColor: 'rgb(239, 68, 68)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top'
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    callback: function(value) {
+                        return currencySymbol + value.toLocaleString();
+                    }
+                }
+            }
+        }
+    }
+});
+</script>
+{% endblock %} 

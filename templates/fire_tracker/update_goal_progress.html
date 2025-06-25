@@ -1,0 +1,57 @@
+{% extends 'fire_tracker/base.html' %}
+
+{% block title %}Update Goal Progress - FIRE Calculator{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold text-gray-900">Update Goal Progress</h1>
+            <p class="text-gray-600">{{ goal.name }}</p>
+        </div>
+
+        <!-- Goal Overview -->
+        <div class="bg-gray-50 rounded-lg p-4 mb-6">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="font-semibold text-gray-900">{{ goal.name }}</h3>
+                <span class="text-sm text-gray-600">{{ goal.get_goal_type_display }}</span>
+            </div>
+            <div class="mb-4">
+                <div class="flex justify-between text-sm text-gray-600">
+                    <span>Target: {{ currency_symbol }}{{ goal.target_amount|floatformat:0 }}</span>
+                    <span>Current: {{ currency_symbol }}{{ goal.current_amount|floatformat:0 }}</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                    <div class="bg-blue-500 h-2 rounded-full" style="width: {{ goal.progress_percentage }}%"></div>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">{{ goal.progress_percentage|floatformat:1 }}% complete</p>
+            </div>
+        </div>
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            
+            <div>
+                <label for="current_amount" class="block text-sm font-medium text-gray-700 mb-2">Current Amount</label>
+                <div class="relative">
+                    <span class="absolute left-3 top-2 text-gray-500">{{ currency_symbol }}</span>
+                    <input type="number" name="current_amount" id="current_amount" 
+                           value="{{ goal.current_amount|floatformat:2 }}"
+                           min="0" step="0.01" required
+                           class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <p class="mt-1 text-sm text-gray-500">Update your current progress toward this goal</p>
+            </div>
+            
+            <div class="flex justify-end space-x-4">
+                <a href="{% url 'fire_tracker:goals' %}" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    Cancel
+                </a>
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    Update Progress
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 

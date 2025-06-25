@@ -1,0 +1,47 @@
+"""
+URL configuration for fire_calculator project.
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/5.0/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+from django.contrib import admin
+from django.urls import path, include
+from django.contrib.auth import views as auth_views
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+from fire_tracker.views import (
+    CustomLoginView,
+    CustomPasswordResetView, CustomPasswordResetConfirmView, CustomPasswordResetDoneView, CustomPasswordResetCompleteView,
+    CustomRegisterView,
+)
+
+def home(request):
+    """Home page that redirects to dashboard if logged in, otherwise to login"""
+    if request.user.is_authenticated:
+        return redirect('fire_tracker:dashboard')
+    else:
+        return redirect('login')
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('login/', CustomLoginView.as_view(), name='login'),
+    path('register/', CustomRegisterView.as_view(), name='register'),
+    path('password_reset/', CustomPasswordResetView.as_view(), name='password_reset'),
+    path('reset/<uidb64>/<token>/', CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('password_reset/done/', CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/done/', CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
+    path('', home, name='home'),
+    path('dashboard/', include('fire_tracker.urls')),
+]
+

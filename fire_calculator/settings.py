@@ -90,10 +90,20 @@ WSGI_APPLICATION = 'fire_calculator.wsgi.application'
 
 # Use Railway's PostgreSQL database if available, otherwise fall back to SQLite
 DATABASE_URL = os.environ.get('DATABASE_URL')
+
 if DATABASE_URL:
-    DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL)
-    }
+    try:
+        DATABASES = {
+            'default': dj_database_url.parse(DATABASE_URL)
+        }
+    except ImportError:
+        # Fallback if dj-database-url is not available
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
 else:
     DATABASES = {
         'default': {

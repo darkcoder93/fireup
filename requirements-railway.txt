@@ -1,3 +1,4 @@
+# Railway-specific requirements
 Django==5.0.1
 whitenoise==6.6.0
 gunicorn==21.2.0

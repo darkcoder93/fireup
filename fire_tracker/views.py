@@ -12,8 +12,11 @@ import json
 from django.core.mail import send_mail
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView, PasswordResetDoneView, PasswordResetCompleteView
 from django.views.generic import TemplateView
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
 
 from .models import UserProfile, MonthlyTracking, FireProgress, Goal, InflationData, Visitor
+from .forms import CustomUserCreationForm
 from django.conf import settings
 
 
@@ -551,10 +554,27 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     extra_context = {'hide_nav': True}
 
 
-# Placeholder for registration view
-class CustomRegisterView(TemplateView):
-    template_name = 'registration/register.html'
-    extra_context = {'hide_nav': True}
+def register(request):
+    """User registration view"""
+    if request.user.is_authenticated:
+        return redirect('fire_tracker:dashboard')
+    
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, f'Welcome to FIRE up, {user.first_name}! Please complete your profile setup.')
+            return redirect('fire_tracker:setup_profile')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = CustomUserCreationForm()
+    
+    return render(request, 'registration/register.html', {
+        'form': form,
+        'hide_nav': True
+    })
 
 
 @csrf_exempt

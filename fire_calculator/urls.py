@@ -22,7 +22,7 @@ from django.contrib.auth.decorators import login_required
 from fire_tracker.views import (
     CustomLoginView,
     CustomPasswordResetView, CustomPasswordResetConfirmView, CustomPasswordResetDoneView, CustomPasswordResetCompleteView,
-    CustomRegisterView,
+    register,
 )
 
 def home(request):
@@ -35,7 +35,7 @@ def home(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', CustomLoginView.as_view(), name='login'),
-    path('register/', CustomRegisterView.as_view(), name='register'),
+    path('register/', register, name='user_register'),
     path('password_reset/', CustomPasswordResetView.as_view(), name='password_reset'),
     path('reset/<uidb64>/<token>/', CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('password_reset/done/', CustomPasswordResetDoneView.as_view(), name='password_reset_done'),

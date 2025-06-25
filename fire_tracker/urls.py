@@ -15,4 +15,5 @@ urlpatterns = [
     path('api/fire-progress/', views.api_fire_progress, name='api_fire_progress'),
     path('help-chat/', views.help_chat, name='help_chat'),
     path('track-visitor/', views.track_visitor, name='track_visitor'),
+    path('register/', views.register, name='register'),
 ] 

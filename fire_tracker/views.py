@@ -51,6 +51,9 @@ def dashboard(request):
         'total': Visitor.get_total_visitors(),
     }
     
+    # Debug: Print visitor statistics
+    print(f"Dashboard visitor stats: {visitor_stats}")
+    
     # Get currency symbol
     currency_symbol = settings.FIRE_SETTINGS[profile.country]['currency_symbol']
 
@@ -561,12 +564,17 @@ def track_visitor(request):
         try:
             # Track the visit
             total_visitors = Visitor.track_visit(request)
+            today_visitors = Visitor.get_today_visitors()
+            
+            print(f"Visitor tracked: Total={total_visitors}, Today={today_visitors}")  # Debug
+            
             return JsonResponse({
                 'success': True,
                 'total_visitors': total_visitors,
-                'today_visitors': Visitor.get_today_visitors(),
+                'today_visitors': today_visitors,
             })
         except Exception as e:
+            print(f"Visitor tracking error: {e}")  # Debug
             return JsonResponse({
                 'success': False,
                 'error': str(e)

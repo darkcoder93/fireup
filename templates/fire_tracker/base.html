@@ -118,6 +118,7 @@
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {% csrf_token %}
         {% block content %}{% endblock %}
     </main>
 
@@ -182,13 +183,28 @@
 
         // Track visitor (simple tracking without page reload)
         function trackVisitor() {
+            // Get CSRF token
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+            
+            if (!csrfToken) {
+                console.log('CSRF token not found, skipping visitor tracking');
+                return;
+            }
+            
             // Send a simple request to track the visit
-            fetch('/track-visitor/', {
+            fetch('{% url "fire_tracker:track_visitor" %}', {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || '',
+                    'X-CSRFToken': csrfToken,
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({}),
+            }).then(response => {
+                if (response.ok) {
+                    console.log('Visitor tracked successfully');
+                } else {
+                    console.log('Visitor tracking failed:', response.status);
+                }
             }).catch(error => {
                 // Silently fail if tracking doesn't work
                 console.log('Visitor tracking failed:', error);

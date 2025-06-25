@@ -161,7 +161,41 @@
         </div>
     </div>
 
-    <!-- Visitor Statistics -->
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <a href="{% url 'fire_tracker:monthly_tracking' %}" class="flex items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                <svg class="w-6 h-6 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                <span class="font-medium text-blue-900">Add Monthly Data</span>
+            </a>
+            
+            <a href="{% url 'fire_tracker:goals' %}" class="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                <svg class="w-6 h-6 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span class="font-medium text-green-900">Set Goals</span>
+            </a>
+            
+            <a href="{% url 'fire_tracker:analytics' %}" class="flex items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+                <svg class="w-6 h-6 text-purple-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                <span class="font-medium text-purple-900">View Analytics</span>
+            </a>
+            
+            <a href="{% url 'fire_tracker:fire_calculator' %}" class="flex items-center p-4 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
+                <svg class="w-6 h-6 text-red-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                </svg>
+                <span class="font-medium text-red-900">FIRE Calculator</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- App Statistics -->
     <div class="bg-white rounded-lg shadow-md p-6">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">📊 App Statistics</h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -239,40 +273,6 @@
             {% else %}
             <p class="text-gray-500 text-center py-4">No active goals. <a href="{% url 'fire_tracker:goals' %}" class="text-blue-600">Create your first goal</a></p>
             {% endif %}
-        </div>
-    </div>
-
-    <!-- Quick Actions -->
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <a href="{% url 'fire_tracker:monthly_tracking' %}" class="flex items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
-                <svg class="w-6 h-6 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                <span class="font-medium text-blue-900">Add Monthly Data</span>
-            </a>
-            
-            <a href="{% url 'fire_tracker:goals' %}" class="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
-                <svg class="w-6 h-6 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <span class="font-medium text-green-900">Set Goals</span>
-            </a>
-            
-            <a href="{% url 'fire_tracker:analytics' %}" class="flex items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
-                <svg class="w-6 h-6 text-purple-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                </svg>
-                <span class="font-medium text-purple-900">View Analytics</span>
-            </a>
-            
-            <a href="{% url 'fire_tracker:fire_calculator' %}" class="flex items-center p-4 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
-                <svg class="w-6 h-6 text-red-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                </svg>
-                <span class="font-medium text-red-900">FIRE Calculator</span>
-            </a>
         </div>
     </div>
 </div>

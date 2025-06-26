@@ -5,6 +5,16 @@
 {% block content %}
 <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
+        <!-- Learn about FIRE up link at the top -->
+        <div class="text-center">
+            <a href="{% url 'fire_tracker:intro' %}" class="inline-flex items-center text-sm font-medium text-green-600 hover:text-green-500 transition-colors duration-200">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Learn about FIRE up
+            </a>
+        </div>
+        
         <div>
             <div class="mx-auto flex items-center justify-center rounded-full bg-white" style="height: 120px; width: 120px;">
                 <span class="animated-fire" style="font-size: 6rem;">🔥</span>

@@ -298,6 +298,15 @@
             </p>
         </div>
     </div>
+    
+    <!-- Made in India Section -->
+    <div class="py-8 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-lg text-gray-700 font-medium">
+                Made in India with love <span class="beating-heart text-red-500 text-xl">❤️</span>
+            </p>
+        </div>
+    </div>
 </div>
 
 <style>
@@ -312,11 +321,21 @@
         animation: flicker 2s infinite alternate;
     }
     
+    .beating-heart {
+        animation: heartbeat 1.5s ease-in-out infinite;
+        display: inline-block;
+    }
+    
     @keyframes flicker {
         0%, 100% { transform: scale(1) rotate(0deg); }
         25% { transform: scale(1.05) rotate(1deg); }
         50% { transform: scale(1.1) rotate(-1deg); }
         75% { transform: scale(1.05) rotate(1deg); }
+    }
+    
+    @keyframes heartbeat {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.2); }
     }
 </style>
 {% endblock %} 

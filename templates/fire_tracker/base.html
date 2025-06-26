@@ -44,6 +44,16 @@
             80%  { transform: scale(1.01) rotate(-2deg);}
             100% { transform: scale(1) rotate(0deg);}
         }
+        
+        .beating-heart {
+            animation: heartbeat 1.5s ease-in-out infinite;
+            display: inline-block;
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
     </style>
     
     {% block extra_css %}{% endblock %}
@@ -170,6 +180,9 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="text-center text-gray-500 text-sm">
                 <p>&copy; 2025 FIRE Calculator. Track your journey to financial independence.</p>
+                <p class="mt-2 text-gray-600 font-medium">
+                    Made in India with love <span class="beating-heart text-red-500 text-lg">❤️</span>
+                </p>
             </div>
         </div>
     </footer>

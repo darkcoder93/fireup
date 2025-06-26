@@ -1,0 +1,322 @@
+{% extends 'fire_tracker/base.html' %}
+
+{% block title %}What is FIRE? - FIRE up{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
+    <!-- Hero Section -->
+    <div class="relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+            <div class="text-center">
+                <div class="flex items-center justify-center mb-8">
+                    <div class="bg-white rounded-full shadow-lg p-4 mr-4">
+                        <span class="animated-fire text-4xl sm:text-5xl">🔥</span>
+                    </div>
+                    <div class="text-left">
+                        <h1 class="text-3xl sm:text-5xl font-bold text-gray-900 mb-2">
+                            <span class="fire-gradient bg-clip-text text-transparent">FIRE</span> up
+                        </h1>
+                        <p class="text-lg sm:text-xl text-gray-600">Financial Independence, Retire Early</p>
+                    </div>
+                </div>
+                <h2 class="text-2xl sm:text-4xl font-bold text-gray-800 mb-6">
+                    What is FIRE and why should you care?
+                </h2>
+                <p class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+                    FIRE is a lifestyle movement focused on extreme savings and investment that allows you to retire much earlier than traditional retirement age.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- What is FIRE Section -->
+    <div class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-gray-900 mb-4">What is FIRE?</h3>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    FIRE stands for <strong>Financial Independence, Retire Early</strong>. It's a movement that challenges the traditional 40-year work cycle.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                <div class="text-center p-6 bg-blue-50 rounded-xl">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                        </svg>
+                    </div>
+                    <h4 class="text-xl font-semibold text-gray-900 mb-2">Financial Independence</h4>
+                    <p class="text-gray-600">Having enough money saved and invested to cover your living expenses without needing to work.</p>
+                </div>
+                
+                <div class="text-center p-6 bg-green-50 rounded-xl">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h4 class="text-xl font-semibold text-gray-900 mb-2">Retire Early</h4>
+                    <p class="text-gray-600">Freedom to stop working for money and pursue what truly matters to you, often in your 30s or 40s.</p>
+                </div>
+                
+                <div class="text-center p-6 bg-purple-50 rounded-xl">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                    <h4 class="text-xl font-semibold text-gray-900 mb-2">Freedom & Choice</h4>
+                    <p class="text-gray-600">The ultimate freedom to choose how you spend your time, energy, and life.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Why FIRE Matters Section -->
+    <div class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-gray-900 mb-4">Why FIRE Matters</h3>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Traditional retirement planning often means working until 65+. FIRE offers a different path.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <h4 class="text-2xl font-bold text-gray-900 mb-6">Traditional vs FIRE Approach</h4>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                                <svg class="w-4 h-4 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold text-gray-900">Traditional Retirement</h5>
+                                <p class="text-gray-600">Work 40+ years, retire at 65, hope you have enough saved</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                                <svg class="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold text-gray-900">FIRE Approach</h5>
+                                <p class="text-gray-600">Save aggressively, invest wisely, retire in your 30s or 40s</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                                <svg class="w-4 h-4 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold text-gray-900">Traditional: Limited Time</h5>
+                                <p class="text-gray-600">20-30 years of retirement, often with health limitations</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-4 mt-1">
+                                <svg class="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold text-gray-900">FIRE: More Freedom</h5>
+                                <p class="text-gray-600">30-50 years of freedom to pursue your passions</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h4 class="text-xl font-bold text-gray-900 mb-4">The Math Behind FIRE</h4>
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-blue-500 pl-4">
+                            <p class="text-sm text-gray-600">Your FIRE Number</p>
+                            <p class="text-lg font-semibold text-gray-900">Annual Expenses × 25</p>
+                        </div>
+                        <div class="border-l-4 border-green-500 pl-4">
+                            <p class="text-sm text-gray-600">4% Rule</p>
+                            <p class="text-lg font-semibold text-gray-900">Safe withdrawal rate for 30+ years</p>
+                        </div>
+                        <div class="border-l-4 border-purple-500 pl-4">
+                            <p class="text-sm text-gray-600">Example</p>
+                            <p class="text-lg font-semibold text-gray-900">$40,000/year expenses = $1M FIRE number</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Section -->
+    <div class="py-16 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-gray-900 mb-4">Learn More About FIRE</h3>
+                <p class="text-lg text-gray-600">
+                    Watch this comprehensive explanation of the FIRE movement and how it can change your life.
+                </p>
+            </div>
+            
+            <div class="relative" style="padding-bottom: 56.25%;">
+                <iframe 
+                    class="absolute top-0 left-0 w-full h-full rounded-xl shadow-lg"
+                    src="https://www.youtube.com/embed/ZHeoUV-48uA" 
+                    title="What is FIRE? Financial Independence Retire Early Explained"
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            
+            <div class="text-center mt-6">
+                <p class="text-sm text-gray-500">
+                    "What is FIRE? Financial Independence Retire Early Explained"
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- What FIRE up Does Section -->
+    <div class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-gray-900 mb-4">What FIRE up Does for You</h3>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    FIRE up is your personal companion on the journey to financial independence. We make FIRE planning simple, visual, and achievable.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md text-center">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                    </div>
+                    <h4 class="font-semibold text-gray-900 mb-2">Track Progress</h4>
+                    <p class="text-sm text-gray-600">Monitor your monthly income, expenses, and net worth growth</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md text-center">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                    </div>
+                    <h4 class="font-semibold text-gray-900 mb-2">Smart Analytics</h4>
+                    <p class="text-sm text-gray-600">Visualize your FIRE journey with charts and insights</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md text-center">
+                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                        </svg>
+                    </div>
+                    <h4 class="font-semibold text-gray-900 mb-2">FIRE Calculator</h4>
+                    <p class="text-sm text-gray-600">Calculate your FIRE number and years to retirement</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md text-center">
+                    <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h4 class="font-semibold text-gray-900 mb-2">Set Goals</h4>
+                    <p class="text-sm text-gray-600">Create and track financial goals and milestones</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Social Proof / Visitor Stats Section -->
+    <div class="py-16 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-gray-900 mb-4">Join the FIRE Movement!</h3>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    You're not alone—thousands are already tracking their journey to financial independence with FIRE up. Be part of a growing community!
+                </p>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="text-center p-6 bg-blue-50 rounded-xl">
+                    <div class="text-3xl font-bold text-blue-600 mb-2">{{ visitor_stats.today }}</div>
+                    <p class="text-sm text-gray-600">Today's Visitors</p>
+                </div>
+                <div class="text-center p-6 bg-green-50 rounded-xl">
+                    <div class="text-3xl font-bold text-green-600 mb-2">{{ visitor_stats.this_week }}</div>
+                    <p class="text-sm text-gray-600">This Week</p>
+                </div>
+                <div class="text-center p-6 bg-purple-50 rounded-xl">
+                    <div class="text-3xl font-bold text-purple-600 mb-2">{{ visitor_stats.this_month }}</div>
+                    <p class="text-sm text-gray-600">This Month</p>
+                </div>
+                <div class="text-center p-6 bg-orange-50 rounded-xl">
+                    <div class="text-3xl font-bold text-orange-600 mb-2">{{ visitor_stats.total }}</div>
+                    <p class="text-sm text-gray-600">Total Visitors</p>
+                </div>
+            </div>
+            <div class="text-center mt-8">
+                <p class="text-lg text-blue-700 font-semibold">Ready to join {{ visitor_stats.total|default:'hundreds of' }} others on the path to financial freedom?</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action Section -->
+    <div class="py-16 bg-gradient-to-r from-blue-600 to-purple-600">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h3 class="text-3xl sm:text-4xl font-bold text-white mb-6">
+                Ready to Get FIRE'd Up? 🔥
+            </h3>
+            <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+                Join thousands of people who are taking control of their financial future. Start your FIRE journey today!
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'user_register' %}" class="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors duration-200 shadow-lg">
+                    Start Your FIRE Journey
+                </a>
+                <a href="{% url 'login' %}" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-600 transition-colors duration-200">
+                    I Already Have an Account
+                </a>
+            </div>
+            
+            <p class="text-blue-100 mt-6 text-sm">
+                Free to use • No credit card required • Start tracking immediately
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .fire-gradient {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .animated-fire {
+        animation: flicker 2s infinite alternate;
+    }
+    
+    @keyframes flicker {
+        0%, 100% { transform: scale(1) rotate(0deg); }
+        25% { transform: scale(1.05) rotate(1deg); }
+        50% { transform: scale(1.1) rotate(-1deg); }
+        75% { transform: scale(1.05) rotate(1deg); }
+    }
+</style>
+{% endblock %} 

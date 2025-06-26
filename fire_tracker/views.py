@@ -46,17 +46,6 @@ def dashboard(request):
         avg_rate=Avg('savings_rate')
     )['avg_rate'] or 0
     
-    # Get visitor statistics
-    visitor_stats = {
-        'today': Visitor.get_today_visitors(),
-        'this_week': Visitor.get_this_week_visitors(),
-        'this_month': Visitor.get_this_month_visitors(),
-        'total': Visitor.get_total_visitors(),
-    }
-    
-    # Debug: Print visitor statistics
-    print(f"Dashboard visitor stats: {visitor_stats}")
-    
     # Get currency symbol
     currency_symbol = settings.FIRE_SETTINGS[profile.country]['currency_symbol']
 
@@ -95,7 +84,6 @@ def dashboard(request):
         'avg_savings_rate': avg_savings_rate,
         'currency_symbol': currency_symbol,
         'fire_numbers': fire_numbers,
-        'visitor_stats': visitor_stats,
     }
     
     return render(request, 'fire_tracker/dashboard.html', context)
@@ -117,6 +105,9 @@ def setup_profile(request):
             profile.country = request.POST.get('country')
             profile.target_retirement_age = int(request.POST.get('target_retirement_age'))
             profile.current_age = int(request.POST.get('current_age'))
+            profile.gender = request.POST.get('gender', 'O')
+            profile.financial_risk = request.POST.get('financial_risk', 'MOD')
+            profile.profile_emoji = request.POST.get('profile_emoji', '')
             profile.annual_income = Decimal(request.POST.get('annual_income'))
             profile.annual_expenses = Decimal(request.POST.get('annual_expenses'))
             profile.current_net_worth = Decimal(request.POST.get('current_net_worth'))
@@ -131,6 +122,9 @@ def setup_profile(request):
                 country=request.POST.get('country'),
                 target_retirement_age=int(request.POST.get('target_retirement_age')),
                 current_age=int(request.POST.get('current_age')),
+                gender=request.POST.get('gender', 'O'),
+                financial_risk=request.POST.get('financial_risk', 'MOD'),
+                profile_emoji=request.POST.get('profile_emoji', ''),
                 annual_income=Decimal(request.POST.get('annual_income')),
                 annual_expenses=Decimal(request.POST.get('annual_expenses')),
                 current_net_worth=Decimal(request.POST.get('current_net_worth')),
@@ -601,3 +595,21 @@ def track_visitor(request):
             }, status=500)
     
     return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+
+
+def intro(request):
+    """Introduction page explaining FIRE to new users"""
+    if request.user.is_authenticated:
+        return redirect('fire_tracker:dashboard')
+    
+    # Get visitor statistics for social proof
+    visitor_stats = {
+        'today': Visitor.get_today_visitors(),
+        'this_week': Visitor.get_this_week_visitors(),
+        'this_month': Visitor.get_this_month_visitors(),
+        'total': Visitor.get_total_visitors(),
+    }
+    
+    return render(request, 'fire_tracker/intro.html', {
+        'visitor_stats': visitor_stats
+    })

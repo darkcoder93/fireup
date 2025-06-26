@@ -5,6 +5,7 @@ app_name = 'fire_tracker'
 
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),
+    path('intro/', views.intro, name='intro'),
     path('setup/', views.setup_profile, name='setup_profile'),
     path('monthly-tracking/', views.monthly_tracking, name='monthly_tracking'),
     path('monthly-tracking/<int:tracking_id>/edit/', views.edit_monthly_tracking, name='edit_monthly_tracking'),
